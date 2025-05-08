@@ -25,11 +25,9 @@ const loginUser = async (req, res) => {
       if (!user) {
         return res.status(404).json({ error: "Usuário não encontrado." });
       }
-  
       if (user.password !== password) {
         return res.status(401).json({ error: "Credenciais inválidas." });
       }
-  
       // Autenticado com sucesso (sem JWT)
       return res.status(200).json({
         message: "Login realizado com sucesso.",
