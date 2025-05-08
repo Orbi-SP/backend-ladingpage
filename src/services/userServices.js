@@ -1,26 +1,21 @@
+// userServices.js
 import User from "../models/User.js";
+import bcrypt from "bcrypt";
 
 class userService {
-  // Método para cadastrar um usuário
   async Create(name, email, password) {
-    try {
-      const newUser = new User({
-        name,
-        email,
-        password,
-      });
-      await newUser.save();
-    } catch (error) {
-      console.log(error);
-    }
+    const newUser = new User({ name, email, password });
+    await newUser.save();
   }
-  async login(email,password) {
-    try {
-      const user = await User.findOne({ email: email, password: password});
-      return user;
-    } catch (error) {
-      console.log(error);
-    }
+
+  async login(email, password) {
+    const user = await User.findOne({ email });
+    if (!user) return null;
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return null;
+
+    return user;
   }
 }
 

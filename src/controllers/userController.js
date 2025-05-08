@@ -1,46 +1,46 @@
+// userController.js
+import bcrypt from "bcrypt";
 import userService from "../services/userServices.js";
 
-// Cadastrando um usuário
-const createUser = async (req, res) => {
-    try {
-      const { name, email, password } = req.body;
-      // AQUI SERIA FEITO O PROCESSO DE HASH DE SENHA
-      await userService.Create(name, email, password);
-      res.sendStatus(201); // Cod. 201 (CREATED)
-    } catch (error) {
-      console.log(error);
-      res.sendStatus(500); // Erro interno do servidor
-    }
-  };
+const SALT_ROUNDS = 10;
 
-// Autenticando um usuário (sem JWT)
+const createUser = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    await userService.Create(name, email, hashedPassword);
+    res.sendStatus(201);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};
+
 const loginUser = async (req, res) => {
-    try {
-      const { email, password } = req.body;
-  
-      if (!email) {
-        return res.status(400).json({ error: "O e-mail enviado é inválido." });
-      }
-      const user = await userService.getOne(email,);
-      if (!user) {
-        return res.status(404).json({ error: "Usuário não encontrado." });
-      }
-      if (user.password !== password) {
-        return res.status(401).json({ error: "Credenciais inválidas." });
-      }
-      // Autenticado com sucesso (sem JWT)
-      return res.status(200).json({
-        message: "Login realizado com sucesso.",
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      res.sendStatus(500); // Internal Server Error
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: "E-mail e senha são obrigatórios." });
     }
-  };
-  
+
+    const user = await userService.login(email, password);
+
+    if (!user) {
+      return res.status(401).json({ error: "Credenciais inválidas." });
+    }
+
+    return res.status(200).json({
+      message: "Login realizado com sucesso.",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};
+
 export default { createUser, loginUser };
