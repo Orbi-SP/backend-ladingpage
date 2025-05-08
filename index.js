@@ -1,13 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors"
-import userRoutes from "./src/routes/userRoutes.js";
 const app = express();
 
-// Importando as rotas (endpoints) de Games
-import gameRoutes from './routes/gameRoutes.js'
 // Importando as rotas (endpoints) de Usuários
-// import userRoutes from './routes/userRoutes.js'
+import userRoutes from "./src/routes/userRoutes.js"
 
 // Configurações do Express
 app.use(express.urlencoded({ extended: false }));
