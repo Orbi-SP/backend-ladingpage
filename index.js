@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors"
-
+import userRoutes from "./src/routes/userRoutes.js";
 const app = express();
 
 // Importando as rotas (endpoints) de Games
@@ -16,7 +16,6 @@ app.use(express.json());
 // Configurando o CORS
 app.use(cors()) // Aberto
 
-app.use('/', gameRoutes)
 app.use('/', userRoutes)
 
 // Iniciando a conexão com o banco de dados do MongoDB
