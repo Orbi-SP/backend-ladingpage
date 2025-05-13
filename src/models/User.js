@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
+  phone: String
 });
 
 // Aqui está sendo criado a coleção games no banco de dados
