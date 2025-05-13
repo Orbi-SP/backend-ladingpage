@@ -6,9 +6,9 @@ const SALT_ROUNDS = 10;
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password,phone } = req.body;
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-    await userService.Create(name, email, hashedPassword);
+    await userService.Create(name, email, hashedPassword,phone);
     res.sendStatus(201);
   } catch (error) {
     console.log(error);
@@ -35,6 +35,7 @@ const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        phone: user.phone
       },
     });
   } catch (error) {

@@ -3,8 +3,8 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 
 class userService {
-  async Create(name, email, password) {
-    const newUser = new User({ name, email, password });
+  async Create(name, email, password,phone) {
+    const newUser = new User({ name, email, password,phone });
     await newUser.save();
   }
 
