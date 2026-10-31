@@ -1,14 +1,13 @@
 import mongoose from "mongoose";
 
 // Documento aninhado
-const userSchema = new mongoose.Schema({
-  name: String,
+const profilesSchema = new mongoose.Schema({
+  username: String,
   email: String,
   password: String,
-  phone: String
 });
 
 // Aqui está sendo criado a coleção games no banco de dados
-const User = mongoose.model("User", userSchema);
+const Profile = mongoose.model("Profile", profilesSchema);
 
-export default User;
+export default Profile;
