@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import profileServices from "../services/profileServices.js";
 
 const SALT_ROUNDS = 10;

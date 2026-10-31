@@ -1,5 +1,5 @@
 import { supabase } from "../config/supabaseClient.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 class ProfileService {
   // --- AUTENTICAÇÃO E USUÁRIOS ---
