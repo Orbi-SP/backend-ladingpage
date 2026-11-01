@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import profileServices from "../services/profileServices.js";
 
 const SALT_ROUNDS = 10;
@@ -32,8 +33,21 @@ const loginProfile = async (req, res) => {
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error("JWT_SECRET não está configurado.");
+      return res.status(500).json({ error: "Autenticação não configurada." });
+    }
+
+    const token = jwt.sign(
+      { sub: profile.id, email: profile.email },
+      secret,
+      { expiresIn: "1h" }
+    );
+
     return res.status(200).json({
       message: "Login realizado com sucesso.",
+      token,
       profile: {
         id: profile.id, // Supabase usa 'id', não '_id'
         username: profile.username, // Correção de profile.name para profile.username
@@ -69,11 +83,15 @@ const createRun = async (req, res) => {
         ]
       }
     */
-    if (!runData || !runData.user_id) {
+    if (!runData) {
       return res.status(400).json({ error: "Dados da run ausentes ou inválidos." });
     }
 
-    const run = await profileServices.createRun(runData, scoresData);
+    const authenticatedRunData = {
+      ...runData,
+      user_id: req.user.sub,
+    };
+    const run = await profileServices.createRun(authenticatedRunData, scoresData);
     return res.status(201).json(run);
   } catch (error) {
     console.error(error);
@@ -94,6 +112,10 @@ const getGlobalRanking = async (req, res) => {
 const getUserRuns = async (req, res) => {
   try {
     const { userId } = req.params;
+    if (userId !== req.user.sub) {
+      return res.status(403).json({ error: "Acesso negado." });
+    }
+
     const runs = await profileServices.getUserRuns(userId);
     return res.status(200).json(runs);
   } catch (error) {
