@@ -76,6 +76,7 @@ class ProfileService {
       .from("runs")
       .select(`
         id,
+        user_id, 
         total_points,
         started_at,
         finished_at,
@@ -93,6 +94,7 @@ class ProfileService {
 
       return {
         run_id: run.id,
+        user_id: run.user_id, // Adicionado aqui para o retorno
         username: run.profiles?.username || "Desconhecido",
         total_points: run.total_points,
         time_spent_ms: timeSpentMs,
